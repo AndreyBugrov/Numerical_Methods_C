@@ -3,6 +3,7 @@
 #include <string> // getline
 #include <cmath> // trigon functions
 #include "functions.h" // numerical methods
+#include <Windows.h> // for localization
 using std::cout;
 using std::cin;
 
@@ -16,7 +17,7 @@ enum class funk_num {
 
 void network_menu()
 {
-    cout << "1: Get network from file" << '\n';
+    cout << "1: Get network from file. The function is x^8-8x^7-15x^5-32x^4+6" << '\n';
     cout << "2: Generate network from test function\n";
     cout << "3: Genereate network from sin x\n";
     cout << "4: Generate network from cos x\n";
@@ -116,6 +117,8 @@ void count_integrals(const vector<double>& x, const vector<double>&y, int segmen
 }
 void menu()
 {
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
     std::string line;
     vector<double> x;
     vector<double>y;
@@ -131,25 +134,38 @@ void menu()
         {
         case '1':
         {
-            cout << "Press the path to file without spaces\n";
+            cout << "Press the path to file without spaces. Delimeters are //\n";
             cout << "There should be alternating x's and y's in the file\n";
+            cout << "There should be number of pairs of points at the beginning\n";
+            cout << "The number should be 12k+1\n";
             std::cin >> line;
             try {
                 std::ifstream in(line); // окрываем файл для чтения 
                 if (in.is_open())
                 {
-                    for (int i = 0; i < 25; i++) {
+                    getline(in, line);
+                    int max_n = std::stoi(line);
+                    if (max_n % 12 != 1) {
+                        throw std::string("Wrong number at the begining of the file\n");
+                    }
+                    for (int i = 0; i < max_n; i++) {
                         getline(in, line);
                         x.push_back(std::stod(line));
                         getline(in, line);
                         y.push_back(std::stod(line));
                     }
+                    in.close();
                 }
-                in.close();
+                else {
+                    throw std::string("File have not been found\n");
+                }
                 count_integrals(x, y, 25, funk_num::test_function);
             }
+            catch (std::string mes) {
+                cout << mes;
+            }
             catch (...) {
-                cout << "Sorry, file did not found\n";
+                cout << "Some error has occured\n";
             }
         }
             break;

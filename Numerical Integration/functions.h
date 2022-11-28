@@ -1,10 +1,8 @@
 #pragma once
-#include <vector> // conteiners for network values
+#include <vector> // containers for network values
 using std::vector;
 double Simpson_rule(double a, double b, double f0, double f1, double f2)
 {
-    std::cout << "b = " << b << " a = " << a << " ";
-    std::cout << "answer = "<<((b - a) / 6) * (f0 + 4 * f1 + f2) << "\n";
     return((b - a) / 6) * (f0 + 4 * f1 + f2);
 }
 double Simpson_3_8_rule(double a, double b, double f0, double f1, double f2, double f3)
